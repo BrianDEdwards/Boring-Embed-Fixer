@@ -2,7 +2,7 @@ import { match } from 'assert';
 import CONFIG from './config.json';
 import * as Discord from 'discord.js';
 
-const TWITTER_MATCHER = /(.*)(twitter\.com)(\/.+\/status\/.*)/g;
+const TWITTER_MATCHER = /(.*)(twitter|x\.com)(\/.+\/status\/.*)/g;
 const TWITTER_FIX: string = 'vxtwitter.com';
 
 const TIK_TOK_MATCHER = /(.*)(tiktok.com)(\/t\/.*)/g;
