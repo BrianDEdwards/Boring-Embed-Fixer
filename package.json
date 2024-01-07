@@ -1,0 +1,17 @@
+{
+  "name": "boring-embed-fixer",
+  "version": "1.0.0",
+  "description": "Discord bot for fixing social embeds",
+  "main": "bot.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6"
+  }
+}
