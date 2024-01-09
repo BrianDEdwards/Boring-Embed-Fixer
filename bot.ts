@@ -1,15 +1,20 @@
-import { match } from 'assert';
 import CONFIG from './config.json';
 import * as Discord from 'discord.js';
 
-const TWITTER_MATCHER = /(.*)(https\:\/\/)(twitter|x\.com)(\/.+\/status\/[\w\/]*)(.*)/g;
-const TWITTER_FIX: string = 'vxtwitter.com';
-
-const TIK_TOK_MATCHER = /(.*)(https:\/\/)(www.tiktok.com)(\/t\/[\w\/]*)(.*)/g;
-const TIK_TOK_FIX = 'vxtiktok.com';
-
-const INSTA_MATCHER = /(.*)(https:\/\/)(www.instagram.com)(\/p\/[\w\/]*)(.*)/g;
-const INSTA_FIX = 'ddinstagram.com';
+const MATCHERS = [
+    {
+        matcher: /(.*)(https\:\/\/)(twitter|x\.com)(\/.+\/status\/[\w\/]*)(.*)/,
+        fix: 'vxtwitter.com'
+    },
+    {
+        matcher: /(.*)(https:\/\/)(www.tiktok.com)(\/t\/[\w\/]*)(.*)/g,
+        fix: 'vxtiktok.com'
+    },
+    {
+        matcher:  /(.*)(https:\/\/)(www.instagram.com)(\/p\/[\w\/]*)(.*)/,
+        fix: 'ddinstagram.com'
+    }
+]
 
 const client = new Discord.Client();
 
@@ -22,24 +27,23 @@ client.login(CONFIG.secret);
 client.on('message', async message => {
     if(message.author.bot) return;
 
-    let replaced = false;
-    let newMessage = message.content;
-
-    if(TWITTER_MATCHER.test(message.content)){
-        newMessage = message.content.replace(TWITTER_MATCHER, `$2${TWITTER_FIX}$4`);
-        replaced = true;
-    }
-    if(TIK_TOK_MATCHER.test(message.content)){
-        newMessage = message.content.replace(TIK_TOK_MATCHER, `$2${TIK_TOK_FIX}$4`);
-        replaced = true;
-    }
-    if(INSTA_MATCHER.test(message.content)){
-        newMessage = message.content.replace(INSTA_MATCHER, `$2${INSTA_FIX}$4`);
-        replaced = true;
-    }
+    let links = [];
+    MATCHERS.forEach(matcherGroup => {
+        checkForLinks(matcherGroup, message.content, links);
+    })
     
-    if(replaced) {
-        await message.channel.send(newMessage);
+    if(links.length > 0) {
+        await message.channel.send(links.join(' '));
     }
 });
 
+
+function checkForLinks(matcherGroup: {matcher: RegExp, fix: string}, message: string, links: string[]){
+    const matchedGroups = matcherGroup.matcher.exec(message);
+
+    if(matchedGroups == null) return;
+    else{
+        links.push(`${matchedGroups[2]}${matcherGroup.fix}${matchedGroups[4]}`);
+        checkForLinks(matcherGroup, matchedGroups[5], links);
+    }
+}
