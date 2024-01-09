@@ -7,7 +7,7 @@ const MATCHERS = [
         fix: 'vxtwitter.com'
     },
     {
-        matcher: /(.*)(https:\/\/)(www.tiktok.com)(\/t\/[\w\/]*)(.*)/g,
+        matcher: /(.*)(https:\/\/)(www.tiktok.com)(\/t\/[\w\/]*)(.*)/,
         fix: 'vxtiktok.com'
     },
     {
